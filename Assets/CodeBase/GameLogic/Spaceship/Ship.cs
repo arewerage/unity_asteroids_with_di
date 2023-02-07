@@ -12,9 +12,9 @@ namespace CodeBase.GameLogic.Spaceship
 
         public event Action Dead;
 
-        private void OnCollisionEnter2D(Collision2D obstacle)
+        private void OnCollisionEnter2D(Collision2D other)
         {
-            if (obstacle.gameObject.TryGetComponent(out IObstacle _))
+            if (other.gameObject.TryGetComponent(out IObstacle _))
                 Dead?.Invoke();
         }
 

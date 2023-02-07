@@ -13,7 +13,7 @@ namespace CodeBase.Configs
         [SerializeField] private AsteroidParams _medium;
         [SerializeField] private AsteroidParams _small;
 
-        public Sprite RandomSprite() =>
+        public Sprite GetRandomSprite() =>
             _sprites[Random.Range(0, _sprites.Length)];
 
         public AsteroidParams GetConfig(AsteroidSize size)
