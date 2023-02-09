@@ -1,4 +1,4 @@
-﻿namespace CodeBase.GameLogic.Asteroid
+﻿namespace CodeBase.Infrastructure.Configs
 {
     public enum AsteroidSize
     {

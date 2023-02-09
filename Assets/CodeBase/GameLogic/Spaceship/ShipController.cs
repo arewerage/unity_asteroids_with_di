@@ -5,24 +5,21 @@ namespace CodeBase.GameLogic.Spaceship
     public class ShipController : IShipController, IFixedTickable
     {
         private readonly IShipInput _shipInput;
-        private readonly Ship.Pool _shipPool;
+        private readonly Ship.Factory _shipFactory;
         
-        private IShip _ship;
+        private Ship _ship;
 
-        public ShipController(IShipInput shipInput, Ship.Pool shipPool)
+        public ShipController(IShipInput shipInput, Ship.Factory shipFactory)
         {
             _shipInput = shipInput;
-            _shipPool = shipPool;
+            _shipFactory = shipFactory;
         }
 
         public void Spawn() =>
-            _ship = _shipPool.Spawn();
+            _ship = _shipFactory.Create();
 
-        public void Despawn()
-        {
-            _shipPool.Despawn(_ship as Ship);
-            _ship = null;
-        }
+        public void Despawn() =>
+            _ship.Dispose();
 
         public void FixedTick()
         {

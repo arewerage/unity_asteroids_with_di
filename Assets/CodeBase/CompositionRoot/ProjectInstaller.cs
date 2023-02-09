@@ -1,4 +1,5 @@
-﻿using CodeBase.Infrastructure.Services.Input;
+﻿using CodeBase.Infrastructure.Configs;
+using CodeBase.Infrastructure.Services.Input;
 using Zenject;
 
 namespace CodeBase.CompositionRoot
@@ -8,6 +9,8 @@ namespace CodeBase.CompositionRoot
         public override void InstallBindings()
         {
             Container.Bind(typeof(IInputService), typeof(IInitializable)).To<InputService>().AsSingle().NonLazy();
+            
+            Container.Bind(typeof(IAsteroidConfigService), typeof(IInitializable)).To<AsteroidConfigService>().AsSingle().NonLazy();
         }
     }
 }
