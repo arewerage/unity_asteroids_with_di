@@ -2,7 +2,7 @@
 {
     public interface IAsteroidConfigService
     {
-        void LoadAll(string path);
+        void LoadAll();
 
         AsteroidConfig GetBy(AsteroidSize size);
     }

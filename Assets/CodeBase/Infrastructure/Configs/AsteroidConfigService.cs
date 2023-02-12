@@ -1,21 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using Zenject;
 
 namespace CodeBase.Infrastructure.Configs
 {
-    public class AsteroidConfigService : IAsteroidConfigService, IInitializable
+    public class AsteroidConfigService : IAsteroidConfigService
     {
         private const string ConfigPath = "Configs/Asteroids";
         
         private Dictionary<AsteroidSize, AsteroidConfig> _configs;
-        
-        public void Initialize() =>
-            LoadAll(ConfigPath);
 
-        public void LoadAll(string path) => 
-            _configs = Resources.LoadAll<AsteroidConfig>(path)
+        public void LoadAll() => 
+            _configs = Resources.LoadAll<AsteroidConfig>(ConfigPath)
                 .ToDictionary(x => x.Size, x => x);
 
         public AsteroidConfig GetBy(AsteroidSize size) =>

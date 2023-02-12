@@ -3,6 +3,6 @@
     public interface IAsteroidsSpawner
     {
         void Spawn(int counts);
-        public void DespawnAll();
+        void DespawnAll();
     }
 }

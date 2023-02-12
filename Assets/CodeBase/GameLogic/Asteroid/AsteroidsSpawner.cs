@@ -9,8 +9,7 @@ namespace CodeBase.GameLogic.Asteroid
     {
         private readonly Asteroid.Factory _asteroidFactory;
         private readonly IAsteroidConfigService _asteroidConfigService;
-
-        private List<Asteroid> _asteroids;
+        private readonly List<Asteroid> _asteroids = new List<Asteroid>();
         
         public AsteroidsSpawner(Asteroid.Factory asteroidFactory, IAsteroidConfigService asteroidConfigService)
         {
@@ -21,11 +20,13 @@ namespace CodeBase.GameLogic.Asteroid
         public void Spawn(int counts)
         {
             // TODO: Add PlacementService
-            for (int i = 0; i < counts; i++)
-            {
-                AsteroidConfig config = _asteroidConfigService.GetBy(EnumUtils.GetRandomEnumValue<AsteroidSize>());
-                Spawn(Vector2.zero, 0f, config);
-            }
+            // for (int i = 0; i < counts; i++)
+            // {
+                 AsteroidConfig config = _asteroidConfigService.GetBy(EnumUtils.GetRandomEnumValue<AsteroidSize>());
+            //     Spawn(Vector2.one * 5f, 0f, config);
+            // }
+            
+            Spawn(Vector2.one * 5f, 0f, config);
         }
         
         private void Spawn(Vector2 position, float angle, AsteroidConfig config)
@@ -39,8 +40,8 @@ namespace CodeBase.GameLogic.Asteroid
 
         public void DespawnAll()
         {
-            foreach (Asteroid asteroid in _asteroids)
-                Despawn(asteroid);
+            for (int i = 0; i < _asteroids.Count; i++)
+                Despawn(_asteroids[i]);
         }
         
         private void OnDead(Asteroid asteroid, AsteroidSize asteroidSize, Vector2 deathPosition)
@@ -49,6 +50,8 @@ namespace CodeBase.GameLogic.Asteroid
 
             if (asteroidSize.TryGetNext(out AsteroidSize size) == false)
                 return;
+            
+            Debug.Log("SPAWN!!!");
 
             AsteroidConfig config = _asteroidConfigService.GetBy(size);
             

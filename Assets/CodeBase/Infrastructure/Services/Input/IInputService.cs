@@ -7,7 +7,6 @@ namespace CodeBase.Infrastructure.Services.Input
     {
         event Action<Vector2> Moved;
         event Action Fired;
-        event Action Paused;
         event Action Played;
         
         void EnableGameplay();

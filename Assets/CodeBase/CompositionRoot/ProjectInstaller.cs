@@ -1,5 +1,7 @@
 ﻿using CodeBase.Infrastructure.Configs;
 using CodeBase.Infrastructure.Services.Input;
+using CodeBase.Infrastructure.Services.SceneLoader;
+using CodeBase.Infrastructure.StateMachine;
 using Zenject;
 
 namespace CodeBase.CompositionRoot
@@ -8,9 +10,13 @@ namespace CodeBase.CompositionRoot
     {
         public override void InstallBindings()
         {
-            Container.Bind(typeof(IInputService), typeof(IInitializable)).To<InputService>().AsSingle().NonLazy();
+            Container.Bind(typeof(IInputService), typeof(IInitializable)).To<InputService>().AsSingle();
+
+            Container.Bind<IAsteroidConfigService>().To<AsteroidConfigService>().AsSingle();
             
-            Container.Bind(typeof(IAsteroidConfigService), typeof(IInitializable)).To<AsteroidConfigService>().AsSingle().NonLazy();
+            Container.Bind<ISceneLoader>().To<SceneLoader>().AsSingle();
+            
+            Container.Bind(typeof(IGameStateMachine), typeof(ITickable)).To<GameStateMachine>().AsSingle();
         }
     }
 }

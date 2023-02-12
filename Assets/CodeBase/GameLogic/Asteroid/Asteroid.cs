@@ -1,5 +1,5 @@
 ﻿using System;
-using CodeBase.GameLogic.Spaceship;
+using CodeBase.GameLogic.Ship;
 using CodeBase.Infrastructure.Configs;
 using UnityEngine;
 using Zenject;
@@ -40,7 +40,7 @@ namespace CodeBase.GameLogic.Asteroid
         {
             _asteroidSize = config.Size;
 
-            _rigidbody.MovePosition(position);
+            _rigidbody.position = position;
             _rigidbody.rotation = angle;
             transform.localScale = Vector2.one * config.Scale;
 

@@ -1,7 +1,10 @@
 ﻿using CodeBase.GameLogic.Asteroid;
 using CodeBase.GameLogic.Bullet;
-using CodeBase.GameLogic.Spaceship;
+using CodeBase.GameLogic.Ship;
 using CodeBase.Infrastructure.Configs;
+using CodeBase.Infrastructure.StateMachine;
+using CodeBase.Infrastructure.StateMachine.States;
+using CodeBase.UI;
 using UnityEngine;
 using Zenject;
 
@@ -26,6 +29,27 @@ namespace CodeBase.CompositionRoot
                 .NonLazy();
 
             Container.BindInterfacesTo<ShipController>().AsSingle();
+
+            Container.Bind<IAsteroidsSpawner>().To<AsteroidsSpawner>().AsSingle();
+
+            Container.Bind<IGameUiScreen>().FromComponentInNewPrefabResource("Prefabs/Game UI Screen").AsSingle();
+
+            Container.Bind<Camera>().FromInstance(Camera.main).AsSingle();
+            
+            BindGameStates();
+        }
+
+        private void BindGameStates()
+        {
+            Container.BindFactory<MainMenuState, MainMenuState.Factory>();
+            Container.BindFactory<GameplayState, GameplayState.Factory>();
+            Container.BindFactory<GameOverState, GameOverState.Factory>();
+            
+            IGameStateMachine gameStateMachine = Container.Resolve<IGameStateMachine>();
+            
+            gameStateMachine.RegisterState(Container.Resolve<MainMenuState.Factory>().Create());
+            gameStateMachine.RegisterState(Container.Resolve<GameplayState.Factory>().Create());
+            gameStateMachine.RegisterState(Container.Resolve<GameOverState.Factory>().Create());
         }
     }
 }

@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7fde3128f74847f487e8b79c04ae8331, type: 3}
   m_Name: Medium
   m_EditorClassIdentifier: 
-  _sprites: []
+  _sprites:
+  - {fileID: 7482667652216324306, guid: 7a1b261047d3f54438c3e651a1ba9258, type: 3}
   Size: 1
   Scale: 0.75
   Speed: 1.5
