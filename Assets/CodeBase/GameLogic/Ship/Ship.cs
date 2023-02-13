@@ -39,6 +39,9 @@ namespace CodeBase.GameLogic.Ship
         public void Turn(float direction, float turnSpeed) =>
             _rigidbody.AddTorque(-direction * turnSpeed);
 
+        public float GetCurrentAngle() =>
+            _rigidbody.rotation;
+
         public class Factory : PlaceholderFactory<Ship>
         {
         }

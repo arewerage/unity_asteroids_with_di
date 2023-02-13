@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _sprites:
   - {fileID: 7482667652216324306, guid: 7a1b261047d3f54438c3e651a1ba9258, type: 3}
-  Size: 0
+  Size: 2
   Scale: 0.5
   Speed: 2
   InstancesOnDead: 0

@@ -2,8 +2,8 @@
 {
     public enum AsteroidSize
     {
-        Small,
+        Big,
         Medium,
-        Big
+        Small
     }
 }

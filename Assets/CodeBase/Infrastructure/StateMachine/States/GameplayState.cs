@@ -31,14 +31,18 @@ namespace CodeBase.Infrastructure.StateMachine.States
         {
             _inputService.EnableGameplay();
             _asteroidConfigService.LoadAll();
+            _asteroidsSpawner.DespawnAll();
             _shipController.Spawn();
             _asteroidsSpawner.Spawn(5);
 
             _shipController.PlayerDead += OnGameLose;
         }
         
-        public void Exit() =>
+        public void Exit()
+        {
             _shipController.PlayerDead -= OnGameLose;
+            _shipController.Despawn();
+        }
 
         private void OnGameLose() =>
             _gameStateMachine.Enter<GameOverState>();

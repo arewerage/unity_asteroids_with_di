@@ -8,11 +8,10 @@ namespace CodeBase.Utils
         {
             var array = (T[])Enum.GetValues(myEnum.GetType());
             int index = Array.IndexOf(array, myEnum) + 1;
-            bool isValid = index < array.Length;
+
+            nextValue = index != array.Length ? array[index] : default(T);
             
-            nextValue = isValid ? array[index] : default(T);
-            
-            return isValid;
+            return index != array.Length;
         }
     }
 }

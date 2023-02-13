@@ -1,5 +1,5 @@
 ﻿using System;
-using UnityEngine;
+using CodeBase.GameLogic.Bullets;
 using Zenject;
 
 namespace CodeBase.GameLogic.Ship
@@ -10,27 +10,32 @@ namespace CodeBase.GameLogic.Ship
         
         private readonly IShipInput _shipInput;
         private readonly Ship.Factory _shipFactory;
-        private readonly Camera _camera;
+        private readonly IBulletsSpawner _bulletsSpawner;
 
         private Ship _ship;
 
-        public ShipController(IShipInput shipInput, Ship.Factory shipFactory, Camera camera)
+        public ShipController(IShipInput shipInput,
+            Ship.Factory shipFactory,
+            IBulletsSpawner bulletsSpawner)
         {
             _shipInput = shipInput;
             _shipFactory = shipFactory;
-            _camera = camera;
+            _bulletsSpawner = bulletsSpawner;
         }
 
         public void Spawn()
         {
             _ship = _shipFactory.Create();
             _ship.Dead += OnPlayerDead;
+            _shipInput.Fired += OnFired;
         }
 
         public void Despawn()
         {
-            _ship.Dispose();
+            _shipInput.Fired -= OnFired;
+            _bulletsSpawner.DespawnAll();
             _ship.Dead -= OnPlayerDead;
+            _ship.Dispose();
         }
 
         public void FixedTick()
@@ -45,6 +50,9 @@ namespace CodeBase.GameLogic.Ship
                 _ship.Turn(_shipInput.TurnValue, 0.35f);
         }
         
+        private void OnFired() => 
+            _bulletsSpawner.Spawn(_ship.transform);
+
         private void OnPlayerDead() =>
             PlayerDead?.Invoke();
     }

@@ -41,8 +41,6 @@ namespace CodeBase.Infrastructure.Services.Input
                 return;
                 
             Fired?.Invoke();
-            
-            Debug.Log("OnFire");
         }
         
         public void OnPlay(InputAction.CallbackContext context)
@@ -51,9 +49,6 @@ namespace CodeBase.Infrastructure.Services.Input
                 return;
 
             Played?.Invoke();
-            // EnableGameplay();
-            
-            Debug.Log("OnPlay");
         }
     }
 }

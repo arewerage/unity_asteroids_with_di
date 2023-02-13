@@ -1,5 +1,5 @@
 ﻿using CodeBase.GameLogic.Asteroid;
-using CodeBase.GameLogic.Bullet;
+using CodeBase.GameLogic.Bullets;
 using CodeBase.GameLogic.Ship;
 using CodeBase.Infrastructure.Configs;
 using CodeBase.Infrastructure.StateMachine;
@@ -21,20 +21,16 @@ namespace CodeBase.CompositionRoot
 
             Container.BindFactory<Vector2, float, AsteroidConfig, Asteroid, Asteroid.Factory>().FromMonoPoolableMemoryPool(
                 x => x.WithInitialSize(32).FromComponentInNewPrefabResource("Prefabs/Asteroid").UnderTransformGroup("Asteroids Pool")).NonLazy();
-            
-            Container.BindMemoryPool<Bullet, Bullet.Pool>()
-                .WithInitialSize(32)
-                .FromComponentInNewPrefabResource("Prefabs/Bullet")
-                .UnderTransformGroup("Bullets Pool")
-                .NonLazy();
+
+            Container.BindFactory<Transform, float, Bullet, Bullet.Factory>().FromMonoPoolableMemoryPool(
+                x => x.WithInitialSize(32).FromComponentInNewPrefabResource("Prefabs/Bullet").UnderTransformGroup("Bullets Pool")).NonLazy();
 
             Container.BindInterfacesTo<ShipController>().AsSingle();
 
             Container.Bind<IAsteroidsSpawner>().To<AsteroidsSpawner>().AsSingle();
+            Container.Bind<IBulletsSpawner>().To<BulletsSpawner>().AsSingle();
 
             Container.Bind<IGameUiScreen>().FromComponentInNewPrefabResource("Prefabs/Game UI Screen").AsSingle();
-
-            Container.Bind<Camera>().FromInstance(Camera.main).AsSingle();
             
             BindGameStates();
         }

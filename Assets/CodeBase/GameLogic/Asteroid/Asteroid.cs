@@ -1,8 +1,9 @@
 ﻿using System;
-using CodeBase.GameLogic.Ship;
+using CodeBase.GameLogic.Bullets;
 using CodeBase.Infrastructure.Configs;
 using UnityEngine;
 using Zenject;
+using Random = UnityEngine.Random;
 
 namespace CodeBase.GameLogic.Asteroid
 {
@@ -19,7 +20,7 @@ namespace CodeBase.GameLogic.Asteroid
 
         private void OnCollisionEnter2D(Collision2D other)
         {
-            if (other.gameObject.TryGetComponent(out IShip _))
+            if (other.gameObject.TryGetComponent(out IBullet _))
                 Dead?.Invoke(this, _asteroidSize, transform.position);
         }
         
@@ -40,9 +41,11 @@ namespace CodeBase.GameLogic.Asteroid
         {
             _asteroidSize = config.Size;
 
-            _rigidbody.position = position;
-            _rigidbody.rotation = angle;
+            transform.rotation = Quaternion.Euler(0f, 0f, angle + Random.Range(0f, 360f));
             transform.localScale = Vector2.one * config.Scale;
+            
+            _rigidbody.position = position;
+            _rigidbody.AddForce(transform.up * config.Speed, ForceMode2D.Impulse);
 
             _spriteRenderer.sprite = config.GetRandomSprite();
         }

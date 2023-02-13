@@ -37,8 +37,6 @@ namespace CodeBase.Infrastructure.StateMachine
             TState state = GetState<TState>();
             _activeState = state;
             _activeTickableState = _activeState as ITickable;
-            
-            Debug.Log($"Enter to {_activeState.GetType().Name}");
       
             return state;
         }
