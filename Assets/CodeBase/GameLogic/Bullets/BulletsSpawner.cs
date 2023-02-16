@@ -7,27 +7,25 @@ namespace CodeBase.GameLogic.Bullets
     {
         private const float DefaultBulletSpeed = 10f;
         
-        private readonly Bullet.Factory _bulletFactory;
-        private readonly List<Bullet> _bullets = new List<Bullet>();
+        private readonly Bullet.Pool _bulletPool;
+        private readonly List<Bullet> _activeBullets = new List<Bullet>();
 
-        public BulletsSpawner(Bullet.Factory bulletFactory)
-        {
-            _bulletFactory = bulletFactory;
-        }
+        public BulletsSpawner(Bullet.Pool bulletPool) =>
+            _bulletPool = bulletPool;
 
         public void Spawn(Transform parent, float speed = DefaultBulletSpeed)
         {
-            Bullet bullet = _bulletFactory.Create(parent, speed);
+            Bullet bullet = _bulletPool.Spawn(parent, speed);
             
             bullet.Dead += OnDead;
             
-            _bullets.Add(bullet);
+            _activeBullets.Add(bullet);
         }
 
         public void DespawnAll()
         {
-            for (int i = 0; i < _bullets.Count; i++)
-                Despawn(_bullets[i]);
+            foreach (Bullet bullet in _activeBullets.ToArray())
+                Despawn(bullet);
         }
         
         private void OnDead(Bullet bullet) =>
@@ -35,9 +33,9 @@ namespace CodeBase.GameLogic.Bullets
 
         private void Despawn(Bullet bullet)
         {
-            _bullets.Remove(bullet);
             bullet.Dead -= OnDead;
-            bullet.Dispose();
+            _bulletPool.Despawn(bullet);
+            _activeBullets.Remove(bullet);
         }
     }
 }

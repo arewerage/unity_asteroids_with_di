@@ -1,4 +1,5 @@
-﻿using CodeBase.Infrastructure.Services.Input;
+﻿using CodeBase.GameLogic.Asteroid;
+using CodeBase.Infrastructure.Services.Input;
 using CodeBase.UI;
 using Zenject;
 
@@ -12,14 +13,17 @@ namespace CodeBase.Infrastructure.StateMachine.States
         private readonly IGameStateMachine _gameStateMachine;
         private readonly IInputService _inputService;
         private readonly IGameUiScreen _gameUiScreen;
+        private readonly IAsteroidsSpawner _asteroidsSpawner;
 
         public GameOverState(IGameStateMachine gameStateMachine,
             IInputService inputService,
-            IGameUiScreen gameUiScreen)
+            IGameUiScreen gameUiScreen,
+            IAsteroidsSpawner asteroidsSpawner)
         {
             _gameStateMachine = gameStateMachine;
             _inputService = inputService;
             _gameUiScreen = gameUiScreen;
+            _asteroidsSpawner = asteroidsSpawner;
         }
         
         public void Enter()
@@ -33,6 +37,7 @@ namespace CodeBase.Infrastructure.StateMachine.States
         {
             _gameUiScreen.Hide();
             _inputService.Played -= OnRestartGame;
+            _asteroidsSpawner.DespawnAll();
         }
         
         private void OnRestartGame() =>

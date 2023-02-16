@@ -1,6 +1,7 @@
 ﻿using System;
 using CodeBase.GameLogic.Bullets;
-using CodeBase.Infrastructure.Configs;
+using CodeBase.GameLogic.Ship;
+using CodeBase.Infrastructure.Configs.Asteroids;
 using UnityEngine;
 using Zenject;
 using Random = UnityEngine.Random;
@@ -8,25 +9,26 @@ using Random = UnityEngine.Random;
 namespace CodeBase.GameLogic.Asteroid
 {
     [RequireComponent(typeof(Rigidbody2D))]
-    public class Asteroid : MonoBehaviour, IAsteroid, IPoolable<Vector2, float, AsteroidConfig, IMemoryPool>, IDisposable
+    public class Asteroid : MonoBehaviour, IAsteroid, IPoolable<Vector2, float, Sprite, AsteroidData, IMemoryPool>, IDisposable
     {
         [SerializeField] private Rigidbody2D _rigidbody;
         [SerializeField] private SpriteRenderer _spriteRenderer;
 
-        public event Action<Asteroid, AsteroidSize, Vector2> Dead;
+        public event Action<Asteroid, AsteroidData, Vector2> Dead;
 
-        private AsteroidSize _asteroidSize;
         private IMemoryPool _pool;
+        private AsteroidData _asteroidData;
 
         private void OnCollisionEnter2D(Collision2D other)
         {
-            if (other.gameObject.TryGetComponent(out IBullet _))
-                Dead?.Invoke(this, _asteroidSize, transform.position);
+            if (other.gameObject.TryGetComponent(out IBullet _)
+                || other.gameObject.TryGetComponent(out IShip _))
+                Dead?.Invoke(this, _asteroidData, transform.position);
         }
         
-        public void OnSpawned(Vector2 position, float angle, AsteroidConfig config, IMemoryPool pool)
+        public void OnSpawned(Vector2 position, float angle, Sprite sprite, AsteroidData data, IMemoryPool pool)
         {
-            ResetManually(position, angle, config);
+            ResetManually(position, angle, sprite, data);
 
             _pool = pool;
         }
@@ -37,20 +39,22 @@ namespace CodeBase.GameLogic.Asteroid
         public void Dispose() =>
             _pool.Despawn(this);
         
-        private void ResetManually(Vector2 position, float angle, AsteroidConfig config)
+        private void ResetManually(Vector2 position, float angle, Sprite sprite, AsteroidData data)
         {
-            _asteroidSize = config.Size;
+            Transform cachedTransform = transform;
+            
+            _asteroidData = data;
 
-            transform.rotation = Quaternion.Euler(0f, 0f, angle + Random.Range(0f, 360f));
-            transform.localScale = Vector2.one * config.Scale;
+            cachedTransform.rotation = Quaternion.Euler(0f, 0f, angle + Random.Range(0f, 360f));
+            cachedTransform.localScale = Vector2.one * data.Scale;
             
             _rigidbody.position = position;
-            _rigidbody.AddForce(transform.up * config.Speed, ForceMode2D.Impulse);
+            _rigidbody.AddForce(cachedTransform.up * data.SpeedFactor, ForceMode2D.Impulse);
 
-            _spriteRenderer.sprite = config.GetRandomSprite();
+            _spriteRenderer.sprite = sprite;
         }
 
-        public class Factory : PlaceholderFactory<Vector2, float, AsteroidConfig, Asteroid>
+        public class Factory : PlaceholderFactory<Vector2, float, Sprite, AsteroidData, Asteroid>
         {
         }
     }

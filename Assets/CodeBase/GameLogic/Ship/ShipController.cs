@@ -9,23 +9,23 @@ namespace CodeBase.GameLogic.Ship
         public event Action PlayerDead;
         
         private readonly IShipInput _shipInput;
-        private readonly Ship.Factory _shipFactory;
+        private readonly Ship.Pool _shipPool;
         private readonly IBulletsSpawner _bulletsSpawner;
 
         private Ship _ship;
 
         public ShipController(IShipInput shipInput,
-            Ship.Factory shipFactory,
+            Ship.Pool shipPool,
             IBulletsSpawner bulletsSpawner)
         {
             _shipInput = shipInput;
-            _shipFactory = shipFactory;
+            _shipPool = shipPool;
             _bulletsSpawner = bulletsSpawner;
         }
 
         public void Spawn()
         {
-            _ship = _shipFactory.Create();
+            _ship = _shipPool.Spawn();
             _ship.Dead += OnPlayerDead;
             _shipInput.Fired += OnFired;
         }
@@ -34,8 +34,11 @@ namespace CodeBase.GameLogic.Ship
         {
             _shipInput.Fired -= OnFired;
             _bulletsSpawner.DespawnAll();
+            
             _ship.Dead -= OnPlayerDead;
-            _ship.Dispose();
+            _shipPool.Despawn(_ship);
+
+            _ship = null;
         }
 
         public void FixedTick()
