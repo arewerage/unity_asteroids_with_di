@@ -3,6 +3,8 @@ using CodeBase.GameLogic.Bullets;
 using CodeBase.GameLogic.Ship;
 using CodeBase.Infrastructure.Configs;
 using CodeBase.Infrastructure.Configs.Asteroids;
+using CodeBase.Infrastructure.Services.ObstaclePlacement;
+using CodeBase.Infrastructure.Services.Screen;
 using CodeBase.Infrastructure.StateMachine;
 using CodeBase.Infrastructure.StateMachine.States;
 using CodeBase.UI;
@@ -15,6 +17,10 @@ namespace CodeBase.CompositionRoot
     {
         public override void InstallBindings()
         {
+            Container.Bind<Camera>().FromComponentInHierarchy().AsSingle();
+            Container.BindInterfacesTo<ScreenService>().AsSingle();
+            Container.BindInterfacesTo<ObstaclePlacementService>().AsSingle();
+            
             BindConfigs();
             BindShip();
             BindFactory();
@@ -22,6 +28,7 @@ namespace CodeBase.CompositionRoot
             BindUi();
             BindGameStates();
         }
+        
         private void BindFactory()
         {
             Container.BindMemoryPool<Ship, Ship.Pool>()

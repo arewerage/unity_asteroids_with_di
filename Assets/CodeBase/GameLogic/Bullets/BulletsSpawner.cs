@@ -5,7 +5,7 @@ namespace CodeBase.GameLogic.Bullets
 {
     public class BulletsSpawner : IBulletsSpawner
     {
-        private const float DefaultBulletSpeed = 10f;
+        private const float DefaultBulletSpeed = 12f;
         
         private readonly Bullet.Pool _bulletPool;
         private readonly List<Bullet> _activeBullets = new List<Bullet>();

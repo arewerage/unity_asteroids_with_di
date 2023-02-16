@@ -24,11 +24,8 @@ namespace CodeBase.GameLogic.Ship
         public void Turn(float direction, float turnSpeed) =>
             _rigidbody.AddTorque(-direction * turnSpeed);
 
-        private void ResetManually()
-        {
-            _rigidbody.position = Vector2.zero;
-            _rigidbody.rotation = 0f;
-        }
+        private void ResetManually() =>
+            transform.SetPositionAndRotation(Vector2.zero, Quaternion.identity);
 
         public class Pool : MonoMemoryPool<Ship>
         {

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using CodeBase.Infrastructure.Configs;
 using CodeBase.Infrastructure.Configs.Asteroids;
+using CodeBase.Infrastructure.Services.ObstaclePlacement;
 using CodeBase.Utils;
 using UnityEngine;
 
@@ -10,26 +10,22 @@ namespace CodeBase.GameLogic.Asteroid
     {
         private readonly Asteroid.Factory _asteroidFactory;
         private readonly AsteroidsConfig _asteroidsConfig;
+        private readonly IObstaclePlacementService _obstaclePlacementService;
         private readonly List<Asteroid> _activeAsteroids = new List<Asteroid>();
         
-        public AsteroidsSpawner(Asteroid.Factory asteroidFactory, AsteroidsConfig asteroidsConfig)
+        public AsteroidsSpawner(Asteroid.Factory asteroidFactory, AsteroidsConfig asteroidsConfig, IObstaclePlacementService obstaclePlacementService)
         {
             _asteroidFactory = asteroidFactory;
             _asteroidsConfig = asteroidsConfig;
+            _obstaclePlacementService = obstaclePlacementService;
         }
 
         public void Spawn(int counts)
         {
-            // TODO: Add PlacementService
-            // for (int i = 0; i < counts; i++)
-            // {
-                AsteroidData config = _asteroidsConfig.Get(EnumUtils.GetRandomEnumValue<AsteroidSize>());
-            //     Spawn(Vector2.one * 5f, 0f, config);
-            // }
+            AsteroidData config = _asteroidsConfig.Get(AsteroidSize.Big);
             
-            Spawn(Vector2.one * 3f, Random.Range(0f, 360f), config);
-            Spawn(Vector2.one * -3f, Random.Range(0f, 360f), config);
-            Spawn(Vector2.right * 5f, Random.Range(0f, 360f), config);
+            for (int i = 0; i < counts; i++)
+                Spawn(_obstaclePlacementService.GetRandomInsideScreenPosition(), Random.Range(0f, 360f), config);
         }
         
         private void Spawn(Vector2 position, float angle, AsteroidData asteroidData)
@@ -57,10 +53,10 @@ namespace CodeBase.GameLogic.Asteroid
                 return;
 
             AsteroidData nextAsteroidData = _asteroidsConfig.Get(nextSize);
-            float angle = 360f / asteroidData.Childs;
+            float angle = 360f / asteroidData.Childs + Random.Range(-30f, 31f);
 
             for (int i = 0; i < asteroidData.Childs; i++)
-                Spawn(deathPosition, i * angle + Random.Range(0f, 360f), nextAsteroidData);
+                Spawn(deathPosition, i * angle, nextAsteroidData);
         }
         
         private void Despawn(Asteroid asteroid)

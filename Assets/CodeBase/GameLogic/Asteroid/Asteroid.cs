@@ -4,7 +4,6 @@ using CodeBase.GameLogic.Ship;
 using CodeBase.Infrastructure.Configs.Asteroids;
 using UnityEngine;
 using Zenject;
-using Random = UnityEngine.Random;
 
 namespace CodeBase.GameLogic.Asteroid
 {
@@ -45,10 +44,9 @@ namespace CodeBase.GameLogic.Asteroid
             
             _asteroidData = data;
 
-            cachedTransform.rotation = Quaternion.Euler(0f, 0f, angle + Random.Range(0f, 360f));
+            cachedTransform.SetPositionAndRotation(position, Quaternion.Euler(0f, 0f, angle));
             cachedTransform.localScale = Vector2.one * data.Scale;
             
-            _rigidbody.position = position;
             _rigidbody.AddForce(cachedTransform.up * data.SpeedFactor, ForceMode2D.Impulse);
 
             _spriteRenderer.sprite = sprite;

@@ -27,7 +27,7 @@ namespace CodeBase.Infrastructure.StateMachine.States
         {
             _inputService.EnableGameplay();
             _shipController.Spawn();
-            _asteroidsSpawner.Spawn(3);
+            _asteroidsSpawner.Spawn(5);
 
             _shipController.PlayerDead += OnGameLose;
         }

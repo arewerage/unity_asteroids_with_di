@@ -8,7 +8,7 @@ namespace CodeBase.Infrastructure.Configs.Asteroids
     {
         public AsteroidSize Size;
         [Range(0.1f, 1f)] public float Scale;
-        [Range(0.5f, 3f)] public float SpeedFactor;
-        [Range(0f, 3f)] public float Childs;
+        [Range(0.6f, 3f)] public float SpeedFactor;
+        [Range(0f, 4f)] public int Childs;
     }
 }

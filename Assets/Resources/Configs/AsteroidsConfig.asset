@@ -19,8 +19,8 @@ MonoBehaviour:
   _big:
     Size: 0
     Scale: 1
-    SpeedFactor: 0
-    Childs: 3
+    SpeedFactor: 0.7
+    Childs: 4
   _medium:
     Size: 1
     Scale: 0.6
