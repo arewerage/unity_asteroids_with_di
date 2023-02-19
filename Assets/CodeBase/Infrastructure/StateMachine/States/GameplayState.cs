@@ -1,6 +1,7 @@
 ﻿using CodeBase.GameLogic.Asteroid;
 using CodeBase.GameLogic.Ship;
 using CodeBase.Infrastructure.Services.Input;
+using CodeBase.UI;
 using Zenject;
 
 namespace CodeBase.Infrastructure.StateMachine.States
@@ -9,17 +10,17 @@ namespace CodeBase.Infrastructure.StateMachine.States
     {
         private readonly IGameStateMachine _gameStateMachine;
         private readonly IShipController _shipController;
-        private readonly IAsteroidsSpawner _asteroidsSpawner;
+        private readonly IAsteroidsController _asteroidsController;
         private readonly IInputService _inputService;
 
         public GameplayState(IGameStateMachine gameStateMachine,
             IShipController shipController,
-            IAsteroidsSpawner asteroidsSpawner,
+            IAsteroidsController asteroidsController,
             IInputService inputService)
         {
             _gameStateMachine = gameStateMachine;
             _shipController = shipController;
-            _asteroidsSpawner = asteroidsSpawner;
+            _asteroidsController = asteroidsController;
             _inputService = inputService;
         }
 
@@ -27,7 +28,7 @@ namespace CodeBase.Infrastructure.StateMachine.States
         {
             _inputService.EnableGameplay();
             _shipController.Spawn();
-            _asteroidsSpawner.Spawn(8);
+            _asteroidsController.Spawn();
 
             _shipController.PlayerDead += OnGameLose;
         }

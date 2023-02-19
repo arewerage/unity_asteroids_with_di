@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace CodeBase.UI
 {
-    public class GameUiScreen : MonoBehaviour, IGameUiScreen
+    public class MenuUiScreen : MonoBehaviour, IMenuUiScreen
     {
         [SerializeField] private TMP_Text _titleText;
         [SerializeField] private TMP_Text _inputHintText;

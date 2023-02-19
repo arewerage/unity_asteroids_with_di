@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using UnityEngine;
 using Zenject;
 
 namespace CodeBase.Infrastructure.StateMachine
@@ -43,7 +42,7 @@ namespace CodeBase.Infrastructure.StateMachine
     
         private TState GetState<TState>() where TState : class, IExitableState =>
             _states[typeof(TState)] as TState;
-
+        
         public void Tick() =>
             _activeTickableState?.Tick();
     }

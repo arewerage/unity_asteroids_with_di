@@ -12,32 +12,32 @@ namespace CodeBase.Infrastructure.StateMachine.States
         
         private readonly IGameStateMachine _gameStateMachine;
         private readonly IInputService _inputService;
-        private readonly IGameUiScreen _gameUiScreen;
-        private readonly IAsteroidsSpawner _asteroidsSpawner;
+        private readonly IMenuUiScreen _menuUiScreen;
+        private readonly IAsteroidsController _asteroidsController;
 
         public GameOverState(IGameStateMachine gameStateMachine,
             IInputService inputService,
-            IGameUiScreen gameUiScreen,
-            IAsteroidsSpawner asteroidsSpawner)
+            IMenuUiScreen menuUiScreen,
+            IAsteroidsController asteroidsController)
         {
             _gameStateMachine = gameStateMachine;
             _inputService = inputService;
-            _gameUiScreen = gameUiScreen;
-            _asteroidsSpawner = asteroidsSpawner;
+            _menuUiScreen = menuUiScreen;
+            _asteroidsController = asteroidsController;
         }
         
         public void Enter()
         {
-            _gameUiScreen.ShowWithTitle(OverTitle, InputHint);
+            _menuUiScreen.ShowWithTitle(OverTitle, InputHint);
             _inputService.EnableUI();
             _inputService.Played += OnRestartGame;
         }
 
         public void Exit()
         {
-            _gameUiScreen.Hide();
+            _menuUiScreen.Hide();
             _inputService.Played -= OnRestartGame;
-            _asteroidsSpawner.DespawnAll();
+            _asteroidsController.DespawnAll();
         }
         
         private void OnRestartGame() =>

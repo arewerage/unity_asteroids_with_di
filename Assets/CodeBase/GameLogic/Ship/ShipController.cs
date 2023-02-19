@@ -1,5 +1,7 @@
 ﻿using System;
 using CodeBase.GameLogic.Bullets;
+using CodeBase.Infrastructure.Configs;
+using UnityEngine;
 using Zenject;
 
 namespace CodeBase.GameLogic.Ship
@@ -11,16 +13,22 @@ namespace CodeBase.GameLogic.Ship
         private readonly IShipInput _shipInput;
         private readonly Ship.Pool _shipPool;
         private readonly IBulletsSpawner _bulletsSpawner;
+        private readonly Camera _gameCamera;
+        private readonly ShipConfig _shipConfig;
 
         private Ship _ship;
 
         public ShipController(IShipInput shipInput,
             Ship.Pool shipPool,
-            IBulletsSpawner bulletsSpawner)
+            IBulletsSpawner bulletsSpawner,
+            Camera gameCamera,
+            ShipConfig shipConfig)
         {
             _shipInput = shipInput;
             _shipPool = shipPool;
             _bulletsSpawner = bulletsSpawner;
+            _gameCamera = gameCamera;
+            _shipConfig = shipConfig;
         }
 
         public void Spawn()
@@ -47,10 +55,12 @@ namespace CodeBase.GameLogic.Ship
                 return;
             
             if (_shipInput.IsThrusting)
-                _ship.AddThrust(3f);
+                _ship.AddThrust(_shipConfig.ThrustingForce);
             
             if (_shipInput.TurnValue != 0f)
-                _ship.Turn(_shipInput.TurnValue, 0.35f);
+                _ship.Turn(_shipInput.TurnValue, _shipConfig.TurnSpeed);
+            
+            _ship.WrapScreen(_gameCamera);
         }
         
         private void OnFired() => 

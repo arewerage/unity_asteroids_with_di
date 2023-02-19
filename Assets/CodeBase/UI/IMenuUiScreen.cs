@@ -1,6 +1,6 @@
 ﻿namespace CodeBase.UI
 {
-    public interface IGameUiScreen
+    public interface IMenuUiScreen
     {
         void ShowWithTitle(string title, string inputHint);
         void Hide();

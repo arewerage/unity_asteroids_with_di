@@ -11,28 +11,28 @@ namespace CodeBase.Infrastructure.StateMachine.States
         
         private readonly IGameStateMachine _gameStateMachine;
         private readonly IInputService _inputService;
-        private readonly IGameUiScreen _gameUiScreen;
+        private readonly IMenuUiScreen _menuUiScreen;
 
         public MainMenuState(IGameStateMachine gameStateMachine,
             IInputService inputService,
-            IGameUiScreen gameUiScreen)
+            IMenuUiScreen menuUiScreen)
         {
             _gameStateMachine = gameStateMachine;
             _inputService = inputService;
-            _gameUiScreen = gameUiScreen;
+            _menuUiScreen = menuUiScreen;
         }
 
         public void Enter()
         {
             _inputService.EnableUI();
             _inputService.Played += OnStartGame;
-            _gameUiScreen.ShowWithTitle(MenuTitle, InputHint);
+            _menuUiScreen.ShowWithTitle(MenuTitle, InputHint);
         }
 
         public void Exit()
         {
             _inputService.Played -= OnStartGame;
-            _gameUiScreen.Hide();
+            _menuUiScreen.Hide();
         }
         
         private void OnStartGame() =>

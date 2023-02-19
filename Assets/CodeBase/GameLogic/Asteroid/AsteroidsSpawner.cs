@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using CodeBase.Infrastructure.Configs.Asteroids;
 using CodeBase.Infrastructure.Services.ObstaclePlacement;
 using CodeBase.Utils;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace CodeBase.GameLogic.Asteroid
 {
@@ -12,8 +14,14 @@ namespace CodeBase.GameLogic.Asteroid
         private readonly AsteroidsConfig _asteroidsConfig;
         private readonly IObstaclePlacementService _obstaclePlacementService;
         private readonly List<Asteroid> _activeAsteroids = new List<Asteroid>();
+
+        public event Action WaveCompleted;
         
-        public AsteroidsSpawner(Asteroid.Factory asteroidFactory, AsteroidsConfig asteroidsConfig, IObstaclePlacementService obstaclePlacementService)
+        public List<Asteroid> ActiveAsteroids => _activeAsteroids;
+        
+        public AsteroidsSpawner(Asteroid.Factory asteroidFactory,
+            AsteroidsConfig asteroidsConfig,
+            IObstaclePlacementService obstaclePlacementService)
         {
             _asteroidFactory = asteroidFactory;
             _asteroidsConfig = asteroidsConfig;
@@ -23,7 +31,7 @@ namespace CodeBase.GameLogic.Asteroid
         public void Spawn(int counts)
         {
             AsteroidData config = _asteroidsConfig.Get(AsteroidSize.Big);
-            
+                
             for (int i = 0; i < counts; i++)
                 Spawn(_obstaclePlacementService.GetRandomInsideScreenPosition(), Random.Range(0f, 360f), config);
         }
@@ -49,14 +57,11 @@ namespace CodeBase.GameLogic.Asteroid
         {
             Despawn(asteroid);
 
-            if (asteroidData.Size.TryGetNext(out AsteroidSize nextSize) == false)
+            if (TrySpawnChild(asteroidData, deathPosition))
                 return;
 
-            AsteroidData nextAsteroidData = _asteroidsConfig.Get(nextSize);
-            float angle = 360f / asteroidData.Childs + Random.Range(-30f, 31f);
-
-            for (int i = 0; i < asteroidData.Childs; i++)
-                Spawn(deathPosition, i * angle, nextAsteroidData);
+            if (IsAsteroidsCountEqualZero())
+                WaveCompleted?.Invoke();
         }
         
         private void Despawn(Asteroid asteroid)
@@ -65,5 +70,22 @@ namespace CodeBase.GameLogic.Asteroid
             asteroid.Dispose();
             _activeAsteroids.Remove(asteroid);
         }
+
+        private bool TrySpawnChild(AsteroidData data, Vector2 position)
+        {
+            if (data.Size.TryGetNext(out AsteroidSize nextSize) == false)
+                return false;
+
+            AsteroidData nextAsteroidData = _asteroidsConfig.Get(nextSize);
+            float angle = 360f / data.Childs;
+
+            for (int i = 0; i < data.Childs; i++)
+                Spawn(position, i * angle, nextAsteroidData);
+
+            return true;
+        }
+
+        private bool IsAsteroidsCountEqualZero() =>
+            _activeAsteroids.Count == 0;
     }
 }

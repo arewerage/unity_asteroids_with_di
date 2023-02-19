@@ -20,6 +20,8 @@ namespace CodeBase.CompositionRoot
             Container.Bind<Camera>().FromComponentInHierarchy().AsSingle();
             Container.BindInterfacesTo<ScreenService>().AsSingle();
             Container.BindInterfacesTo<ObstaclePlacementService>().AsSingle();
+
+            Container.BindInterfacesTo<AsteroidsController>().AsSingle();
             
             BindConfigs();
             BindShip();
@@ -33,15 +35,14 @@ namespace CodeBase.CompositionRoot
         {
             Container.BindMemoryPool<Ship, Ship.Pool>()
                 .WithInitialSize(1)
-                .FromComponentInNewPrefabResource("Prefabs/Ship");
+                .FromComponentInNewPrefabResource(ResourcesPath.Ship);
 
             Container.BindFactory<Vector2, float, Sprite, AsteroidData, Asteroid, Asteroid.Factory>().FromMonoPoolableMemoryPool(
-                    x => x.WithInitialSize(16).FromComponentInNewPrefabResource("Prefabs/Asteroid").UnderTransformGroup("Asteroids Pool"))
-                .NonLazy();
+                    x => x.WithInitialSize(16).FromComponentInNewPrefabResource(ResourcesPath.Asteroid).UnderTransformGroup("Asteroids Pool")).NonLazy();
 
             Container.BindMemoryPool<Bullet, Bullet.Pool>()
                 .WithInitialSize(16)
-                .FromComponentInNewPrefabResource("Prefabs/Bullet")
+                .FromComponentInNewPrefabResource(ResourcesPath.Bullet)
                 .UnderTransformGroup("Bullets Pool")
                 .NonLazy();
         }
@@ -54,8 +55,9 @@ namespace CodeBase.CompositionRoot
 
         private void BindConfigs()
         {
-            Container.Bind<AsteroidsConfig>().FromScriptableObjectResource("Configs/AsteroidsConfig").AsSingle();
-            Container.Bind<ShipConfig>().FromScriptableObjectResource("Configs/ShipConfig").AsSingle();
+            Container.Bind<AsteroidsConfig>().FromScriptableObjectResource(ResourcesPath.AsteroidsConfig).AsSingle();
+            Container.Bind<ShipConfig>().FromScriptableObjectResource(ResourcesPath.ShipConfig).AsSingle();
+            Container.Bind<GameConfig>().FromScriptableObjectResource(ResourcesPath.GameConfig).AsSingle();
         }
 
         private void BindGameStates()
@@ -79,7 +81,7 @@ namespace CodeBase.CompositionRoot
         
         private void BindUi()
         {
-            Container.Bind<IGameUiScreen>().FromComponentInNewPrefabResource("Prefabs/Game UI Screen").AsSingle();
+            Container.Bind<IMenuUiScreen>().FromComponentInNewPrefabResource("Prefabs/Menu UI Screen").AsSingle();
         }
     }
 }
