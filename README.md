@@ -4,6 +4,8 @@
 
 ![preview](../media/preview.gif?raw=true)
 
+## Запускать с Boot сцены!
+
 ## Главные цели:
 * Чистая архитектура проекта
 * Явный жизненный цикл приложения (Entry Point, Main Loop, etc.)
@@ -14,4 +16,3 @@
 * Zenject
 * UniTask
 * UniRx
-* Dotween (пока не задействован)
